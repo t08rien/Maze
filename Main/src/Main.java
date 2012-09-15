@@ -5,9 +5,8 @@
 
 public class Main {
     public static void main(String[] args) {
-        Maze maze = new Maze(10, 10, 10);
-//        maze.print();
-
-        System.out.println("Done");
+        Maze maze = new Maze(3, 3, 1);
+        maze.print();
     }
+
 }
