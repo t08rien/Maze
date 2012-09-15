@@ -5,7 +5,7 @@
 
 public class Main {
     public static void main(String[] args) {
-        Maze maze = new Maze(3, 3, 1);
+        Maze maze = new Maze(3, 3, 2);
         maze.print();
     }
 

@@ -27,14 +27,14 @@ public class Maze {
         this.width = 2*width - 1;
         this.height = 2*height - 1;
         this.depth = 2*depth - 1;
+        start = 0; end = 0;
 
         int size = this.width*this.height*this.depth;
-
         cubes = new Cube[size];
         DisjointSets sets = new DisjointSets(size);
-        List<Integer> east = new ArrayList<Integer>(size/2);
-        List<Integer> south = new ArrayList<Integer>(size/2);
-        List<Integer> back = new ArrayList<Integer>(size/2);
+        List<Integer> east = new ArrayList<Integer>(size/8 + 3);
+        List<Integer> south = new ArrayList<Integer>(size/8 + 3);
+        List<Integer> back = new ArrayList<Integer>(size/8 + 3);
 
         initializeLists(east, south, back);
 
@@ -42,7 +42,6 @@ public class Maze {
             tryEast( sets, east.remove(east.size()-1));
             trySouth( sets, south.remove(south.size()-1));
             tryBack( sets, back.remove(back.size()-1));
-
         } while (!east.isEmpty());
 
         setStart();
@@ -194,7 +193,7 @@ public class Maze {
     private void solve() {
         length = 0;
         assignNeighbors();
-        DFS(cubes[0], 0);
+        DFS(cubes[start], 0);
     }
 
     private void DFS(Cube cube, int pathLength) {
@@ -245,7 +244,7 @@ public class Maze {
 
                     for (int dir : Direction.DIRECTIONS) {
                         if (checkDirection(row, col, dep, dir))
-                            cubes[flatten(row, col, dep)].neighborIndices.add(getNeighbor(row, col, dep, dir));
+                            cubes[flatten(row, col, dep)].neighborIndices.add(getNeighborIndex(row, col, dep, dir));
 
                     }
                 }
@@ -253,7 +252,7 @@ public class Maze {
         }
     }
 
-    private int getNeighbor(int row, int col, int dep, int dir) {
+    private int getNeighborIndex(int row, int col, int dep, int dir) {
         IndexOutOfBoundsException outOfBounds = new IndexOutOfBoundsException("Direction: "+dir+" Position: ("+row+","+col+","+dep+")");
 
         switch (dir) {
