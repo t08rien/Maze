@@ -26,28 +26,7 @@ public class Maze {
         List<Integer> south = new ArrayList<Integer>(size/2);
         List<Integer> back = new ArrayList<Integer>(size/2);
 
-        int index;
-        for (int dep = 0; dep < this.depth; ++dep) {
-            for (int row = 0; row < this.height; ++row) {
-                for (int col = 0; col < this.width; ++col) {
-                    index = flatten(row, col, dep);
-                    if (even(row) && even(col) && even(dep)) {
-                        cubes[index] = Cube.OPEN;
-
-                        east.add(index);
-                        south.add(index);
-                        back.add(index);
-                    }
-                    else {
-                        cubes[index] = Cube.WALL;
-                    }
-                }
-            }
-        }
-
-        Collections.shuffle(east);
-        Collections.shuffle(south);
-        Collections.shuffle(back);
+        initializeLists(east, south, back);
 
         do {
             tryEast( sets, east.remove(east.size()-1));
@@ -58,6 +37,18 @@ public class Maze {
 
         setStart();
         setEnd();
+    }
+
+    public int getWidth() {
+        return width;
+    }
+
+    public int getHeight() {
+        return height;
+    }
+
+    public int getDepth() {
+        return depth;
     }
 
     public int at(int row, int col, int depth) {
@@ -119,6 +110,31 @@ public class Maze {
         }
     }
 
+    private void initializeLists(List<Integer> east, List<Integer> south, List<Integer> back) {
+        int index;
+        for (int dep = 0; dep < depth; ++dep) {
+            for (int row = 0; row < height; ++row) {
+                for (int col = 0; col < width; ++col) {
+                    index = flatten(row, col, dep);
+                    if (even(row) && even(col) && even(dep)) {
+                        cubes[index] = Cube.OPEN;
+
+                        east.add(index);
+                        south.add(index);
+                        back.add(index);
+                    }
+                    else {
+                        cubes[index] = Cube.WALL;
+                    }
+                }
+            }
+        }
+
+        Collections.shuffle(east);
+        Collections.shuffle(south);
+        Collections.shuffle(back);
+    }
+
     private void tryWall(DisjointSets sets, int index, int step) {
         if (sets.findRoot(index) == sets.findRoot(index + step*2))
             return;
@@ -164,5 +180,12 @@ public class Maze {
 
     private static boolean even(int i) {
         return i % 2 == 0;
+    }
+
+    public static class Cube {
+        final static public int OPEN = 0;
+        final static public int WALL = 1;
+        final static public int START = 2;
+        final static public int END = 3;
     }
 }
